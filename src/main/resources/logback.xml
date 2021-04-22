@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration debug="false">
+
+	<!-- VARIABLE FECHA -->
+	<timestamp key="fecha" datePattern="dd-MM-yyyy" />
+	
+	<property name="nombre" value="Javier Ramos"/>
+	
+	<!-- APPENDER -->
+	<appender name="JaviLogger"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+		<!-- Etiqueta File, se encargará de especificar la ruta a la cuál se van 
+			a dirigir los ficheros con la información de las trazas -->
+		<file>C://dev//logs//elb1JRL-${nombre}.log</file>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+
+			<!-- En esta etiqueta de fileNamePattern al final podemos poner .zip para 
+				que aparezca -->
+			<fileNamePattern>C://dev//logs//elb1JRL-${nombre}<!--OTRA OPCIÓN : -${fecha} -->.%i.log.zip
+			</fileNamePattern>
+
+			<!-- Estas etiquetas servirán para determinar las veces que aparecerán, 
+				como mínimo o como máximo, los ficheros creados en la ruta anteriormente 
+				especificada -->
+			<minIndex>1</minIndex>
+			<maxIndex>3</maxIndex>
+		</rollingPolicy>
+
+		<triggeringPolicy
+			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>50KB</maxFileSize>
+		</triggeringPolicy>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - [%method]
+				- %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- CREACIÓN DE OTRO APPENDER PARA MOSTRAR LA INFORMACIÓN QUE SE ALMACENA 
+		EN LA CONSOLA DE ECLIPSE -->
+
+	<appender name="ConsolaJavi"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%-4relative [%thread] %-5level %logger{35} - %msg %n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<!-- CREACIÓN DE OTRO APPENDER PARA QUE NOS MUESTRE LA TRAZA DE TRACE -->
+
+	<appender name="TraceJavi"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - [%method]
+				- %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- ROOT, CON LA ETIQUETA ROOT VAMOS A MOSTRAR LOS LOGGER QUE SEAN DE NIVEL 
+		DEBUG, O INFERIOR, POR EJEMPLO ESTA ETIQUETA MOSTRARÁ LOS NIVELES DEBUG,INFO,WARN,ERROR -->
+	<root level="debug">
+		<appender-ref ref="JaviLogger" />
+		<appender-ref ref="ConsolaJavi" />
+	</root>
+
+	<!-- CREAMOS OTRO ROOT, QUE SE VA A ENCARGAR DE MOSTRAR LAS TRAZAS TRACE, 
+		ESTE ROOT HABRÁ QUE DESCOMENTARLO PARA QUE EN LA CLASE APP APAREZCA EL LOGGER.TRACE -->
+	<!-- <root level="trace"> <appender-ref ref="TraceJavi" /> </root> -->
+
+</configuration>
